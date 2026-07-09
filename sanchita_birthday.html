@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Sanchita!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  :root{
+    --pink:#FF6FA0;
+    --pink-deep:#E14D82;
+    --yellow:#FFD23F;
+    --blue:#4EA8DE;
+    --purple:#7B4B94;
+    --cream:#FFF7ED;
+    --plum:#3D2645;
+    --mint:#6FE3B4;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    font-family:'Quicksand', sans-serif;
+    background: linear-gradient(180deg, #FFE8F1 0%, #FFF7ED 30%, #FFF7ED 100%);
+    color:var(--plum);
+    overflow-x:hidden;
+    position:relative;
+    min-height:100vh;
+  }
+
+  #confetti-canvas{
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    pointer-events:none;
+    z-index:9999;
+  }
+
+  .balloon{
+    position:fixed;
+    bottom:-150px;
+    width:60px;
+    height:75px;
+    border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+    animation: floatUp linear infinite;
+    z-index:1;
+    opacity:0.85;
+  }
+  .balloon::after{
+    content:'';
+    position:absolute;
+    bottom:-22px;
+    left:50%;
+    width:1px;
+    height:22px;
+    background:rgba(61,38,69,0.3);
+  }
+  @keyframes floatUp{
+    0%{ transform: translateY(0) translateX(0) rotate(0deg); }
+    50%{ transform: translateY(-60vh) translateX(30px) rotate(5deg); }
+    100%{ transform: translateY(-130vh) translateX(-20px) rotate(-5deg); }
+  }
+
+  /* ---- screen system ---- */
+  .screens{
+    position:relative;
+    z-index:2;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:40px 20px;
+  }
+  .screen{
+    display:none;
+    max-width:640px;
+    width:100%;
+    text-align:center;
+    animation: riseIn .5s ease both;
+  }
+  .screen.active{ display:block; }
+  @keyframes riseIn{
+    from{ opacity:0; transform:translateY(18px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  .dots{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    margin-bottom:34px;
+  }
+  .dot{
+    width:8px; height:8px;
+    border-radius:50%;
+    background:#F0C4D6;
+  }
+  .dot.on{ background:var(--pink-deep); }
+
+  .eyebrow{
+    font-family:'Fredoka', sans-serif;
+    font-size:15px;
+    letter-spacing:2px;
+    color:var(--pink-deep);
+    text-transform:uppercase;
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  h1.title{
+    font-family:'Fredoka', sans-serif;
+    font-weight:700;
+    font-size:clamp(40px, 10vw, 72px);
+    line-height:1.05;
+    margin:0 0 8px;
+    color:var(--plum);
+  }
+  h1.title .pop{
+    color:var(--pink-deep);
+    display:inline-block;
+    transform:rotate(-2deg);
+  }
+  .subtitle{
+    font-size:18px;
+    color:#6B4E75;
+    max-width:460px;
+    margin:14px auto 0;
+    font-weight:500;
+  }
+  .sticker-row{
+    display:flex;
+    justify-content:center;
+    gap:18px;
+    font-size:32px;
+    margin-top:20px;
+  }
+  .sticker-row span{
+    display:inline-block;
+    animation: wiggle 2.4s ease-in-out infinite;
+  }
+  .sticker-row span:nth-child(2){ animation-delay:.3s; }
+  .sticker-row span:nth-child(3){ animation-delay:.6s; }
+  .sticker-row span:nth-child(4){ animation-delay:.9s; }
+  @keyframes wiggle{
+    0%,100%{ transform: rotate(-6deg); }
+    50%{ transform: rotate(6deg); }
+  }
+
+  .section-label{
+    font-family:'Fredoka', sans-serif;
+    font-weight:600;
+    font-size:14px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    color:var(--blue);
+    margin-bottom:10px;
+  }
+  .section-title{
+    font-family:'Fredoka', sans-serif;
+    font-weight:600;
+    font-size:28px;
+    margin:0 0 28px;
+    color:var(--plum);
+  }
+
+  /* message */
+  .message-card{
+    background:#fff;
+    border-radius:20px;
+    padding:32px 34px;
+    box-shadow:0 10px 26px rgba(61,38,69,0.1);
+    line-height:1.75;
+    font-size:17px;
+    color:#4E3856;
+    border:2px dashed #FFD5E6;
+    text-align:left;
+  }
+  .message-card p{ margin:0 0 14px; }
+  .message-card p:last-child{ margin-bottom:0; }
+  .signoff{
+    font-family:'Fredoka', sans-serif;
+    font-weight:600;
+    color:var(--pink-deep);
+    text-align:right;
+    margin-top:18px !important;
+  }
+
+  /* photo collage */
+  #collageArea{
+    padding:20px;
+  }
+  .gallery{
+    display:grid;
+    grid-template-columns:repeat(3, minmax(130px, 160px));
+    gap:18px;
+    justify-content:center;
+  }
+  .polaroid{
+    background:#fff;
+    padding:12px 12px 36px;
+    border-radius:6px;
+    box-shadow:0 10px 24px rgba(61,38,69,0.14);
+    transform:rotate(var(--tilt));
+    transition: transform .25s ease;
+    position:relative;
+  }
+  .polaroid:nth-child(1){ --tilt:-5deg; }
+  .polaroid:nth-child(2){ --tilt:3deg; }
+  .polaroid:nth-child(3){ --tilt:-2deg; }
+  .polaroid:nth-child(4){ --tilt:2deg; }
+  .polaroid:nth-child(5){ --tilt:-4deg; }
+  .polaroid:nth-child(6){ --tilt:4deg; }
+  .polaroid:hover{ transform:rotate(0deg) scale(1.04); }
+  .polaroid .frame{
+    width:100%;
+    aspect-ratio:1/1;
+    border-radius:2px;
+    perspective:800px;
+    cursor:pointer;
+  }
+  .flip-inner{
+    position:relative;
+    width:100%;
+    height:100%;
+    transition: transform .6s cubic-bezier(.4,.2,.2,1);
+    transform-style:preserve-3d;
+  }
+  .polaroid.revealed .flip-inner{ transform:rotateY(180deg); }
+  .flip-front, .flip-back{
+    position:absolute;
+    inset:0;
+    backface-visibility:hidden;
+    border-radius:2px;
+    overflow:hidden;
+  }
+  .flip-front{
+    background: repeating-linear-gradient(135deg, #FFE3EF, #FFE3EF 10px, #FFEFD9 10px, #FFEFD9 20px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .flip-front .placeholder{
+    text-align:center;
+    color:#B8869C;
+    font-family:'Fredoka', sans-serif;
+    font-size:12px;
+    font-weight:500;
+    padding:8px;
+  }
+  .flip-front .placeholder i{
+    display:block;
+    font-size:22px;
+    margin-bottom:6px;
+  }
+  .flip-back{
+    transform:rotateY(180deg);
+    background-color:#f2e9ec;
+    background-size:cover;
+    background-position:center;
+  }
+  .flip-back img{
+    display:none;
+  }
+  .polaroid .caption{
+    position:absolute;
+    bottom:9px;
+    left:0; right:0;
+    text-align:center;
+    font-family:'Fredoka', sans-serif;
+    font-size:12px;
+    color:#8A6B78;
+  }
+
+  .save-hint{
+    font-size:14px;
+    color:#8A6B78;
+    margin-top:18px;
+    font-weight:500;
+  }
+
+  /* cake */
+  .cake-wrap{
+    position:relative;
+    width:260px;
+    margin:0 auto;
+  }
+  .candles{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    margin-bottom:-6px;
+    position:relative;
+    z-index:3;
+  }
+  .candle{
+    width:9px;
+    height:42px;
+    background: linear-gradient(180deg, var(--yellow), #FFB03F);
+    border-radius:4px;
+    position:relative;
+    cursor:pointer;
+  }
+  .candle .flame{
+    position:absolute;
+    top:-18px;
+    left:50%;
+    transform:translateX(-50%);
+    width:13px;
+    height:20px;
+    background: radial-gradient(circle at 50% 70%, #FFF3B0, #FF8A3D 70%, #FF5D3D);
+    border-radius:50% 50% 50% 50% / 65% 65% 35% 35%;
+    animation: flicker 1s ease-in-out infinite alternate;
+    transition: opacity .2s ease, transform .2s ease;
+  }
+  .candle.out .flame{
+    opacity:0;
+    transform:translateX(-50%) scale(0.4);
+  }
+  @keyframes flicker{
+    0%{ transform:translateX(-50%) scale(1) rotate(-2deg); }
+    100%{ transform:translateX(-50%) scale(1.08) rotate(3deg); }
+  }
+  .cake-body{
+    background: linear-gradient(180deg, #FFC9DE, var(--pink));
+    height:74px;
+    border-radius:14px 14px 6px 6px;
+    position:relative;
+    box-shadow: inset 0 -14px 0 rgba(255,255,255,0.25);
+  }
+  .cake-plate{
+    height:14px;
+    width:110%;
+    margin-left:-5%;
+    background:var(--purple);
+    border-radius:50%;
+    box-shadow:0 6px 14px rgba(61,38,69,0.2);
+  }
+  .cake-hint{
+    font-size:14px;
+    color:#8A6B78;
+    margin-bottom:22px;
+    font-weight:500;
+  }
+  .wish-text{
+    font-family:'Fredoka', sans-serif;
+    font-weight:600;
+    font-size:20px;
+    color:var(--pink-deep);
+    margin-top:24px;
+    opacity:0;
+    transform:translateY(10px);
+    transition: opacity .5s ease, transform .5s ease;
+    min-height:26px;
+  }
+  .wish-text.show{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  /* buttons */
+  .btn-row{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin-top:32px;
+    flex-wrap:wrap;
+  }
+  button{
+    font-family:'Fredoka', sans-serif;
+    font-weight:600;
+    font-size:15px;
+    border:none;
+    border-radius:999px;
+    padding:13px 28px;
+    cursor:pointer;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  button:active{ transform:scale(0.96); }
+  .btn-primary{
+    background:var(--pink-deep);
+    color:#fff;
+    box-shadow:0 8px 18px rgba(225,77,130,0.35);
+  }
+  .btn-primary:hover{ box-shadow:0 10px 22px rgba(225,77,130,0.45); }
+  .btn-ghost{
+    background:#fff;
+    color:var(--pink-deep);
+    border:2px solid #FFD5E6;
+  }
+  .btn-ghost:hover{ background:#FFF3F8; }
+
+  footer{
+    text-align:center;
+    margin-top:36px;
+    font-size:13px;
+    color:#B8869C;
+    font-weight:500;
+  }
+
+  @media (max-width: 480px){
+    .gallery{
+      grid-template-columns:repeat(2, minmax(120px, 1fr));
+      gap:14px;
+    }
+    .screens{ padding:28px 14px; }
+    .btn-row{ gap:10px; }
+    button{ padding:12px 22px; font-size:14px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .balloon, .sticker-row span, .candle .flame{ animation:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+<div id="balloon-layer"></div>
+
+<div class="screens">
+
+  <!-- Screen 1: Hero -->
+  <div class="screen active" data-screen="1">
+    <div class="dots"><span class="dot on"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+    <div class="eyebrow">A little internet corner, just for you</div>
+    <h1 class="title">Happy Birthday<br><span class="pop">Sanchita!</span></h1>
+    <p class="subtitle">One whole year cooler, funnier, and more loved than the last. Today's all about you 🎂</p>
+    <div class="sticker-row"><span>🎈</span><span>🎉</span><span>✨</span><span>🎀</span></div>
+    <div class="btn-row">
+      <button class="btn-primary" data-next="2">Next</button>
+    </div>
+  </div>
+
+  <!-- Screen 2: Message -->
+  <div class="screen" data-screen="2">
+    <div class="dots"><span class="dot"></span><span class="dot on"></span><span class="dot"></span><span class="dot"></span></div>
+    <div class="section-label">From me to you</div>
+    <div class="section-title">Happy birthday, Sanchita</div>
+    <div class="message-card">
+      <p>I hope today feels exactly like you deserve, easy, joyful, and full of the little things that make you smile.</p>
+      <p>Thank you for being the kind of friend who makes everything better just by being around. Here's to another year of inside jokes, spontaneous plans, and all the good stuff still coming your way.</p>
+      <p class="signoff">love you lots 💗 <br> Avani </p>
+    </div>
+    <div class="btn-row">
+      <button class="btn-ghost" data-prev="1">Back</button>
+      <button class="btn-primary" data-next="3">Next</button>
+    </div>
+  </div>
+
+  <!-- Screen 3: Photos / collage -->
+  <div class="screen" data-screen="3">
+    <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot on"></span><span class="dot"></span></div>
+    <div class="section-label">Memory lane</div>
+    <div class="section-title">Some of my favorite moments</div>
+    <div id="collageArea">
+      <div class="gallery">
+        <div class="polaroid">
+          <div class="frame">
+            <div class="flip-inner">
+              <div class="flip-front"><div class="placeholder"><i>🎁</i>tap to<br>reveal</div></div>
+              <div class="flip-back"><img src="photo1.jpeg" alt="photo of Sanchita"></div>
+            </div>
+          </div>
+          <div class="caption">us :)</div>
+        </div>
+        <div class="polaroid">
+          <div class="frame">
+            <div class="flip-inner">
+              <div class="flip-front"><div class="placeholder"><i>🎁</i>tap to<br>reveal</div></div>
+              <div class="flip-back"><img src="photo2.jpeg" alt="photo of Sanchita"></div>
+            </div>
+          </div>
+          <div class="caption">iconic era</div>
+        </div>
+        <div class="polaroid">
+          <div class="frame">
+            <div class="flip-inner">
+              <div class="flip-front"><div class="placeholder"><i>🎁</i>tap to<br>reveal</div></div>
+              <div class="flip-back"><img src="photo3.jpeg" alt="photo of Sanchita"></div>
+            </div>
+          </div>
+          <div class="caption">main character</div>
+        </div>
+        <div class="polaroid">
+          <div class="frame">
+            <div class="flip-inner">
+              <div class="flip-front"><div class="placeholder"><i>🎁</i>tap to<br>reveal</div></div>
+              <div class="flip-back"><img src="photo4.jpeg" alt="photo of Sanchita"></div>
+            </div>
+          </div>
+          <div class="caption">good times</div>
+        </div>
+        <div class="polaroid">
+          <div class="frame">
+            <div class="flip-inner">
+              <div class="flip-front"><div class="placeholder"><i>🎁</i>tap to<br>reveal</div></div>
+              <div class="flip-back"><img src="photo5.jpeg" alt="photo of Sanchita"></div>
+            </div>
+          </div>
+          <div class="caption">chaos era</div>
+        </div>
+        <div class="polaroid">
+          <div class="frame">
+            <div class="flip-inner">
+              <div class="flip-front"><div class="placeholder"><i>🎁</i>tap to<br>reveal</div></div>
+              <div class="flip-back"><img src="photo6.jpeg" alt="photo of Sanchita"></div>
+            </div>
+          </div>
+          <div class="caption">forever besties</div>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-ghost" data-prev="2">Back</button>
+      <button class="btn-ghost" id="saveCollageBtn">Save collage</button>
+      <button class="btn-primary" data-next="4">Next</button>
+    </div>
+  </div>
+
+  <!-- Screen 4: Cake -->
+  <div class="screen" data-screen="4">
+    <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot on"></span></div>
+    <div class="section-label">Make a wish</div>
+    <div class="section-title">Blow out the candles</div>
+    <div class="cake-hint">(tap each candle)</div>
+    <div class="cake-wrap">
+      <div class="candles" id="candles">
+        <div class="candle"><div class="flame"></div></div>
+        <div class="candle"><div class="flame"></div></div>
+        <div class="candle"><div class="flame"></div></div>
+      </div>
+      <div class="cake-body"></div>
+      <div class="cake-plate"></div>
+    </div>
+    <div class="wish-text" id="wishText">Wish made. Here's to you, Sanchita ✨</div>
+    <div class="btn-row">
+      <button class="btn-ghost" data-prev="3">Back</button>
+    </div>
+    <footer>made with love, for the best kind of birthday</footer>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var balloonLayer = document.getElementById('balloon-layer');
+  var colors = ['#FF6FA0','#FFD23F','#4EA8DE','#7B4B94','#6FE3B4'];
+  for(var i=0;i<9;i++){
+    var b = document.createElement('div');
+    b.className = 'balloon';
+    b.style.left = (Math.random()*100) + 'vw';
+    b.style.background = colors[i % colors.length];
+    b.style.animationDuration = (14 + Math.random()*10) + 's';
+    b.style.animationDelay = (Math.random()*12) + 's';
+    balloonLayer.appendChild(b);
+  }
+
+  var canvas = document.getElementById('confetti-canvas');
+  var ctx = canvas.getContext('2d');
+  function resize(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  var pieces = [];
+  function burst(x, y, count){
+    for(var i=0;i<count;i++){
+      pieces.push({
+        x: x, y: y,
+        vx: (Math.random()-0.5)*10,
+        vy: Math.random()*-10 - 4,
+        size: 5 + Math.random()*5,
+        color: colors[Math.floor(Math.random()*colors.length)],
+        rot: Math.random()*360,
+        vr: (Math.random()-0.5)*14,
+        life: 0
+      });
+    }
+  }
+
+  function tick(){
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    for(var i = pieces.length-1; i>=0; i--){
+      var p = pieces[i];
+      p.vy += 0.28;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.vr;
+      p.life++;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot * Math.PI/180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
+      ctx.restore();
+      if(p.y > canvas.height + 40 || p.life > 400){ pieces.splice(i,1); }
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+  setTimeout(function(){ burst(window.innerWidth/2, -20, 60); }, 300);
+
+  // convert photo <img> tags into cover-cropped backgrounds
+  // (keeps the img tags in the HTML so they're easy to edit, but renders
+  // via CSS background so photos crop correctly both on screen and when saved)
+  document.querySelectorAll('.flip-back').forEach(function(back){
+    var img = back.querySelector('img');
+    if(img && img.getAttribute('src')){
+      back.style.backgroundImage = "url('" + img.getAttribute('src') + "')";
+    }
+  });
+
+  // tap to reveal photos
+  document.querySelectorAll('.polaroid .frame').forEach(function(frame){
+    frame.addEventListener('click', function(){
+      var card = frame.closest('.polaroid');
+      var justRevealed = !card.classList.contains('revealed');
+      card.classList.toggle('revealed');
+      if(justRevealed){
+        var rect = frame.getBoundingClientRect();
+        burst(rect.left + rect.width/2, rect.top + rect.height/2, 18);
+      }
+    });
+  });
+
+  // save collage
+  var saveBtn = document.getElementById('saveCollageBtn');
+  saveBtn.addEventListener('click', function(){
+    var original = saveBtn.textContent;
+    saveBtn.textContent = 'Saving...';
+    html2canvas(document.getElementById('collageArea'), {backgroundColor: null, scale: 2}).then(function(canvasResult){
+      var link = document.createElement('a');
+      link.download = 'sanchita-birthday-collage.png';
+      link.href = canvasResult.toDataURL('image/png');
+      link.click();
+      saveBtn.textContent = original;
+    }).catch(function(){
+      saveBtn.textContent = original;
+      alert('Could not save the collage. Try again.');
+    });
+  });
+
+  // candles
+  var candles = document.querySelectorAll('.candle');
+  var wishText = document.getElementById('wishText');
+  candles.forEach(function(c){
+    c.addEventListener('click', function(){
+      if(c.classList.contains('out')) return;
+      c.classList.add('out');
+      var rect = c.getBoundingClientRect();
+      burst(rect.left + rect.width/2, rect.top, 30);
+      var allOut = Array.from(candles).every(function(cc){ return cc.classList.contains('out'); });
+      if(allOut){
+        wishText.classList.add('show');
+        var cakeRect = document.querySelector('.cake-body').getBoundingClientRect();
+        burst(cakeRect.left + cakeRect.width/2, cakeRect.top, 120);
+      }
+    });
+  });
+
+  // screen navigation
+  var screens = document.querySelectorAll('.screen');
+  function goTo(n){
+    screens.forEach(function(s){
+      s.classList.toggle('active', s.getAttribute('data-screen') === String(n));
+    });
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  document.querySelectorAll('[data-next]').forEach(function(btn){
+    btn.addEventListener('click', function(){ goTo(btn.getAttribute('data-next')); });
+  });
+  document.querySelectorAll('[data-prev]').forEach(function(btn){
+    btn.addEventListener('click', function(){ goTo(btn.getAttribute('data-prev')); });
+  });
+})();
+</script>
+
+</body>
+</html>
